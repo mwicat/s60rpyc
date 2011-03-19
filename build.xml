@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project name="rpyc" default="py2sis" basedir="." xmlns:antsy="antlib:com.mwicat.antsymble">
+
+	<property file="symbiant.properties" />
+
+	<property name="src.dir" value="src" />
+	<property name="dist.dir" value="dist" />
+	<property name="appname" value="${ant.project.name}" />
+	<!--<property name="uid" value="0xefb5e998" />-->
+	<property name="caps" value="ALL-TCB-CommDD-MultimediaDD-DRM-DiskAdmin-NetworkControl-AllFiles" />
+	<property name="profile" value="s60ui" />
+	<property name="py.src" location="${src.dir}/argtest.py" />
+	<property name="sisfile" location="${dist.dir}/${appname}.sis" />
+	<property name="tmp.dir" value="E:\Others" />
+	<property name="pys60.drive" value="E:" />
+	<property name="install.drive" value="E:" />
+	<property environment="env" />
+
+	<taskdef resource="pyAntTasks.properties" />
+
+	<target name="py2sis">
+		<antsy:py2sis src="${py.src}">
+			<options>
+				<arg value="--appname=${appname}" />
+				<arg value="--caps=${caps}" />
+				<arg value="--cert=${cert}" />
+				<arg value="--privkey=${privkey}" />
+				<arg value="--profile=${profile}" />
+			</options>
+			<args>
+				<arg value="${sisfile}" />
+			</args>
+		</antsy:py2sis>
+	</target>
+
+	<target name="upload">
+		<antsy:upload host="${rpyc.host}" src="${sisfile}" dst="e:\others" />
+	</target>
+
+	<target name="upload-script">
+		<antsy:upload-script host="${rpyc.host}" src="${py.src}" drive="${pys60.drive}" />
+	</target>
+
+	<target name="upload-script-emu">
+		<antsy:upload-script-emu root="${env.EPOCROOT}" src="${py.src}" />
+	</target>
+	
+	
+	<target name="install">
+		<antsy:install sis="${tmp.dir}\${sisfile}" drive="${install.drive}" />
+	</target>
+
+	<target name="run">
+		<antsy:run drive="${install.drive}" name="${appname}_${uid}.exe" />
+	</target>
+
+	<target name="run-script">
+		<antsy:run-script drive="${pys60.drive}" name="${py.src}" />
+	</target>
+
+
+</project>
